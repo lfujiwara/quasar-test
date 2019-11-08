@@ -60,7 +60,6 @@ export default {
           this.rows = data.coins
           this.isFetching = false
         })
-      console.log(this.rows)
     }
   },
   created () {
