@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md">
-    <q-markup-table>
+    <q-markup-table v-if="!isFetching">
       <thead>
         <th class="text-left">
           Crypto
@@ -32,6 +32,13 @@
         </tr>
       </tbody>
     </q-markup-table>
+    <q-circular-progress
+      v-else
+      indeterminate
+      size="50px"
+      color="primary"
+      class="fixed-center"
+    />
   </div>
 </template>
 
@@ -51,11 +58,12 @@ export default {
     isFetching: true
   }),
   methods: {
+    sleep: (ms) => (new Promise(resolve => setTimeout(resolve, ms))),
     fetchCoins: function () {
-      this.isFetching = true
       fetch('https://api.coinranking.com/v1/public/coins')
         .then(res => res.json())
-        .then(res => {
+        .then(async res => {
+          await this.sleep(500)
           let data = res.data
           this.rows = data.coins
           this.isFetching = false
@@ -65,6 +73,9 @@ export default {
   created () {
     setTimeout(this.fetchCoins, 5 * 60 * 1000)
     this.fetchCoins()
+  },
+  beforeMount () {
+    this.isFetching = true
   }
 }
 </script>
