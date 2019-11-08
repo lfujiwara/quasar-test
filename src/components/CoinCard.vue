@@ -26,7 +26,9 @@
           <td class="text-right">
             $ {{ Math.round(row.marketCap/10000)/100 }} millions
           </td>
-          <td class="text-right" :class="{ 'red-text':(row.change < 0), 'green-text':(row.change > 0) }">
+          <td class="text-left" :class="{ 'red-text':(row.change < 0), 'green-text':(row.change > 0) }">
+            <q-icon name="keyboard_arrow_up" v-if="isPositive(row.change)"/>
+            <q-icon name="keyboard_arrow_down" v-if="isNegative(row.change)"/>
             {{ row.change }} %
           </td>
         </tr>
@@ -68,7 +70,9 @@ export default {
           this.rows = data.coins
           this.isFetching = false
         })
-    }
+    },
+    isPositive: (v) => (v > 0),
+    isNegative: (v) => (v < 0)
   },
   created () {
     setTimeout(this.fetchCoins, 5 * 60 * 1000)
