@@ -5,13 +5,13 @@
         <th class="text-left">
           Crypto
         </th>
-        <th class="text-right">
+        <th class="text-left">
           Price
         </th>
-        <th class="text-right">
+        <th class="text-left">
           Market Cap
         </th>
-        <th class="text-right">
+        <th class="text-left">
           24-hour change
         </th>
       </thead>
@@ -20,11 +20,11 @@
           <td class="text-left">
             <img class="vertical-middle" :src="row.iconUrl" style="width: 1.5em"> {{ row.name }}
           </td>
-          <td class="text-right">
-            $ {{ Math.round(row.price*100)/100 }}
+          <td class="text-left">
+            $ {{ normalizePrice(row.price) }}
           </td>
-          <td class="text-right">
-            $ {{ Math.round(row.marketCap/10000)/100 }} millions
+          <td class="text-left">
+            $ {{ normalizeMarketCap(row.marketCap) }} millions
           </td>
           <td class="text-left" :class="{ 'red-text':(row.change < 0), 'green-text':(row.change > 0) }">
             <q-icon name="keyboard_arrow_up" v-if="isPositive(row.change)"/>
@@ -72,7 +72,11 @@ export default {
         })
     },
     isPositive: (v) => (v > 0),
-    isNegative: (v) => (v < 0)
+    isNegative: (v) => (v < 0),
+    normalizePrice: (price) => (Math.round(price * 100) / 100).toString().padEnd(15),
+    normalizeMarketCap: (marketCap) => {
+      return (Math.round(marketCap / 10000) / 100).toString().padEnd(15)
+    }
   },
   created () {
     setTimeout(this.fetchCoins, 5 * 60 * 1000)
